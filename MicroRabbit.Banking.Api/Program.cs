@@ -14,15 +14,27 @@ namespace MicroRabbit.Banking.Api
             builder.Services.AddDbContext<BankingDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("BankingDbConnection")));
 
-            DependencyContianer.RegisterServices(builder.Services);
-
             builder.Services.AddControllers();
+
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new() { Title = "Banking Microservice", Version = "v1" });
+            });
+
+            // Add MediatR FIX THIS
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+
+            DependencyContianer.RegisterServices(builder.Services);
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Banking Microservice V1"));
 
             app.UseAuthorization();
 

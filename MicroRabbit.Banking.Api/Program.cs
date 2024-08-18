@@ -1,3 +1,7 @@
+using MicroRabbit.Banking.Data.Context;
+using MicroRabbit.Infra.IoC;
+using Microsoft.EntityFrameworkCore;
+
 namespace MicroRabbit.Banking.Api
 {
     public class Program
@@ -7,6 +11,10 @@ namespace MicroRabbit.Banking.Api
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddDbContext<BankingDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("BankingDbConnection")));
+
+            DependencyContianer.RegisterServices(builder.Services);
 
             builder.Services.AddControllers();
 

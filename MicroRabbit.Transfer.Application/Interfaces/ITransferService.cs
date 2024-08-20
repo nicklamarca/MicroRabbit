@@ -2,7 +2,7 @@
 
 using MicroRabbit.Transfer.Domain.Models;
 
-namespace MicroRabbit.Banking.Application.Interfaces
+namespace MicroRabbit.Transfer.Application.Interfaces
 {
     public interface ITransferService
     {

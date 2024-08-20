@@ -25,7 +25,7 @@ namespace MicroRabbit.Transfer.Api
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 
-            DependencyContianer.RegisterServices(builder.Services);
+            DependencyContianer.RegisterServices(builder.Services, builder.Configuration);
 
             var app = builder.Build();
 

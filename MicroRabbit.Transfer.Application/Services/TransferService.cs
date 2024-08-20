@@ -1,9 +1,9 @@
 ﻿using MicroRabbit.Transfer.Domain.Models;
 using MicroRabbit.Domain.Core.Bus;
-using MicroRabbit.Banking.Application.Interfaces;
 using MicroRabbit.Transfer.Domain.Interfaces;
+using MicroRabbit.Transfer.Application.Interfaces;
 
-namespace MicroRabbit.Banking.Application.Services
+namespace MicroRabbit.Transfer.Application.Services
 {
     public class TransferService : ITransferService
     {
@@ -18,7 +18,7 @@ namespace MicroRabbit.Banking.Application.Services
 
         public IEnumerable<TransferLog> GetTransferLogs()
         {
-            throw new NotImplementedException();
+           return _transferRepository.GetTransferLogs();
         }
     }
 }

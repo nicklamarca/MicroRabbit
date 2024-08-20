@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MicroRabbit.Transfer.Data.Context;
 
-namespace MicroRabbit.Banking.Data.Context
+namespace MicroRabbit.Transfer.Data.Context
 {
     public class TransferDbContextFactory : IDesignTimeDbContextFactory<TransferDbContext>
     {

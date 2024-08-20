@@ -1,3 +1,5 @@
+using MicroRabbit.MVC.Services;
+
 namespace MicroRabbit.MVC
 {
     public class Program
@@ -8,6 +10,8 @@ namespace MicroRabbit.MVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddHttpClient<ITransferService, TransferService>();
 
             var app = builder.Build();
 

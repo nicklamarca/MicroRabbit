@@ -7,6 +7,7 @@ using System;
 using Newtonsoft.Json;
 using System.Text;
 using RabbitMQ.Client.Events;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MicroRabbit.Infra.Bus
 {
@@ -15,9 +16,11 @@ namespace MicroRabbit.Infra.Bus
         private readonly IMediator _mediator;
         private readonly Dictionary<string, List<Type>> _handlers;
         private readonly List<Type> _eventTypes;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public RabbitMQBus(IMediator mediator)
+        public RabbitMQBus(IMediator mediator, IServiceScopeFactory serviceScopeFactory)
         {
+            _serviceScopeFactory = serviceScopeFactory;
             _mediator = mediator;
             _handlers = new Dictionary<string, List<Type>>();
             _eventTypes = new List<Type>();
@@ -107,10 +110,13 @@ namespace MicroRabbit.Infra.Bus
         {
             if (_handlers.ContainsKey(eventName))
             {
-                var subscriptions = _handlers[eventName];
-                foreach (var subscription in subscriptions)
+                using (var scope = _serviceScopeFactory.CreateScope())
                 {
-                    var handler = Activator.CreateInstance(subscription);
+                   var subscriptions = _handlers[eventName];
+                   foreach (var subscription in subscriptions)
+                   {
+                    //var handler = Activator.CreateInstance(subscription);
+                    var handler = scope.ServiceProvider.GetService(subscription);
                     if (handler == null) continue;
 
                     var eventType = _eventTypes.SingleOrDefault(t => t.Name == eventName);
@@ -118,7 +124,11 @@ namespace MicroRabbit.Infra.Bus
                     var concreteType = typeof(IEventHandler<>).MakeGenericType(eventType);
 
                     await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { @event });
+                    }
+                  
                 }
+
+              
             }
         }
     }
